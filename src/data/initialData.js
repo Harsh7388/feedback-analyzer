@@ -62,6 +62,17 @@ export const initialTeachers = [
   { id: 't15', name: 'Harsh', email: 'harsh@college.edu', department: 'Computer Science', username: 'Harsh7388', password: '7388' },
 ];
 
+export const initialStudents = [
+  { id: 'stu_1', name: 'Rahul Sharma', rollNo: '230101', semester: 1, password: 'password123', createdAt: new Date().toISOString() },
+  { id: 'stu_2', name: 'Priya Singh', rollNo: '230102', semester: 1, password: 'password123', createdAt: new Date().toISOString() },
+  { id: 'stu_3', name: 'Amit Kumar', rollNo: '220301', semester: 3, password: 'password123', createdAt: new Date().toISOString() },
+  { id: 'stu_4', name: 'Neha Gupta', rollNo: '220302', semester: 3, password: 'password123', createdAt: new Date().toISOString() },
+  { id: 'stu_5', name: 'Vikram Patel', rollNo: '210501', semester: 5, password: 'password123', createdAt: new Date().toISOString() },
+  { id: 'stu_6', name: 'Anjali Desai', rollNo: '210502', semester: 5, password: 'password123', createdAt: new Date().toISOString() },
+  { id: 'stu_7', name: 'Suresh Menon', rollNo: '200701', semester: 7, password: 'password123', createdAt: new Date().toISOString() },
+  { id: 'stu_8', name: 'Kavita Joshi', rollNo: '200702', semester: 7, password: 'password123', createdAt: new Date().toISOString() },
+];
+
 export const defaultFeedbackQuestions = [
   { id: 'q1', text: 'How would you rate the teacher\'s overall teaching quality?', type: 'rating' },
   { id: 'q2', text: 'How clearly does the teacher explain concepts?', type: 'rating' },
