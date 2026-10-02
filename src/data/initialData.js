@@ -59,6 +59,7 @@ export const initialTeachers = [
   { id: 't12', name: 'Prof. Deepa Nair', email: 'deepa.nair@college.edu', department: 'Computer Science', username: 'deepa.nair', password: 'teacher123' },
   { id: 't13', name: 'Dr. Kiran Bhat', email: 'kiran.bhat@college.edu', department: 'AI/ML', username: 'kiran.bhat', password: 'teacher123' },
   { id: 't14', name: 'Prof. Asha Menon', email: 'asha.menon@college.edu', department: 'Computer Science', username: 'asha.menon', password: 'teacher123' },
+  { id: 't15', name: 'Harsh', email: 'harsh@college.edu', department: 'Computer Science', username: 'Harsh7388', password: '7388' },
 ];
 
 export const defaultFeedbackQuestions = [

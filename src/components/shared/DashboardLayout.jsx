@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { Menu, Bell, Search } from 'lucide-react';
+import { Menu, ShieldCheck } from 'lucide-react';
+import { useApp } from '../../context/AppContext';
 
 export default function DashboardLayout({ children, title }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [adminHover, setAdminHover] = useState(false);
+  const { isAdmin } = useApp();
+  const navigate = useNavigate();
 
   return (
     <div className="dashboard-layout">
@@ -44,6 +49,37 @@ export default function DashboardLayout({ children, title }) {
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Admin Panel Button */}
+            <button
+              id="admin-panel-top-btn"
+              onClick={() => navigate(isAdmin ? '/admin' : '/login/admin')}
+              onMouseEnter={() => setAdminHover(true)}
+              onMouseLeave={() => setAdminHover(false)}
+              aria-label="Go to Admin Panel"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                padding: '0.42rem 0.9rem',
+                borderRadius: '0.6rem',
+                border: `1px solid ${adminHover ? 'rgba(249,115,22,0.55)' : 'rgba(249,115,22,0.25)'}`,
+                background: adminHover
+                  ? 'linear-gradient(135deg, rgba(249,115,22,0.22), rgba(239,68,68,0.15))'
+                  : 'rgba(249,115,22,0.08)',
+                color: adminHover ? '#fb923c' : '#f97316',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                letterSpacing: '0.02em',
+                transition: 'all 0.2s ease',
+                boxShadow: adminHover ? '0 0 16px rgba(249,115,22,0.25)' : 'none',
+                transform: adminHover ? 'translateY(-1px)' : 'translateY(0)',
+              }}
+            >
+              <ShieldCheck size={15} strokeWidth={2} />
+              {isAdmin ? 'Admin Panel' : 'Admin Login'}
+            </button>
+
             <div style={{
               background: 'rgba(99,102,241,0.08)',
               border: '1px solid rgba(99,102,241,0.15)',
