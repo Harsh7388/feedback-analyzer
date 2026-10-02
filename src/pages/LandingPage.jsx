@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Brain, GraduationCap, UserCheck, ArrowRight,
-  BarChart2, MessageCircle, TrendingUp, CheckCircle, ChevronRight
+  BarChart2, MessageCircle, TrendingUp, CheckCircle, ChevronRight, ShieldCheck
 } from 'lucide-react';
 
 // ─── Animated counter ─────────────────────────────────────────────
@@ -95,6 +95,17 @@ const roles = [
     border: 'rgba(6,182,212,0.18)',
     description: 'Monitor engagement and create feedback forms',
     items: ['Check submission status', 'Create feedback forms', 'View student enrollment'],
+  },
+  {
+    id: 'admin',
+    label: 'Admin',
+    path: '/login/admin',
+    icon: ShieldCheck,
+    accentColor: '#f97316',
+    bg: 'rgba(249,115,22,0.06)',
+    border: 'rgba(249,115,22,0.18)',
+    description: 'Manage platform and analyze feedback sentiment',
+    items: ['System-wide analytics', 'AI sentiment breakdown', 'User & role management'],
   },
 ];
 
