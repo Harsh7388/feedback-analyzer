@@ -4,6 +4,7 @@ import {
   Brain, GraduationCap, UserCheck, ArrowRight,
   BarChart2, MessageCircle, TrendingUp, CheckCircle, ChevronRight, ShieldCheck
 } from 'lucide-react';
+import Chatbot from '../components/shared/Chatbot';
 
 // ─── Animated counter ─────────────────────────────────────────────
 function Counter({ end, suffix = '' }) {
@@ -155,18 +156,17 @@ export default function LandingPage() {
         borderBottom: '1px solid rgba(255,255,255,0.05)',
       }}>
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-          <div style={{
-            width: 34, height: 34, borderRadius: '10px',
-            background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 0 16px rgba(99,102,241,0.45)',
-          }}>
-            <Brain size={18} color="white" strokeWidth={1.8} />
-          </div>
-          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.05rem', color: '#f1f5f9', letterSpacing: '-0.01em' }}>
-            Feed<span style={{ color: '#818cf8' }}>Sense</span>
-          </span>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <img
+            src="/feedsence-logo.png"
+            alt="FeedSence"
+            style={{
+              height: '42px',
+              width: 'auto',
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 0 8px rgba(99,102,241,0.5))',
+            }}
+          />
         </div>
 
         {/* Nav links */}
@@ -490,6 +490,7 @@ export default function LandingPage() {
         </footer>
 
       </div>
+      <Chatbot />
     </div>
   );
 }

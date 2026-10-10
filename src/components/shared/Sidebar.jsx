@@ -9,21 +9,18 @@ import {
 
 function Logo() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2rem', padding: '0 0.5rem' }}>
-      <div style={{
-        width: 42, height: 42, borderRadius: '12px',
-        background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: '0 0 20px rgba(99,102,241,0.4)',
-      }}>
-        <Brain size={22} color="white" />
-      </div>
-      <div>
-        <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, fontSize: '1.2rem', color: '#f1f5f9' }}>
-          Feed<span style={{ color: '#8b5cf6' }}>Sense</span>
-        </span>
-        <div style={{ fontSize: '0.65rem', color: '#64748b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>AI Feedback</div>
-      </div>
+    <div style={{ marginBottom: '1.5rem', padding: '0 0.25rem' }}>
+      <img
+        src="/feedsence-logo.png"
+        alt="FeedSence"
+        style={{
+          width: '100%',
+          maxWidth: '180px',
+          height: 'auto',
+          objectFit: 'contain',
+          filter: 'drop-shadow(0 0 12px rgba(99,102,241,0.5))',
+        }}
+      />
     </div>
   );
 }

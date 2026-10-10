@@ -10,6 +10,9 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, Legend
 } from 'recharts';
 import { aggregateFeedbacks } from '../../utils/sentimentAnalysis';
+import { initialFeedbacks } from '../../data/initialData';
+import { saveFeedbacks } from '../../utils/storage';
+import toast from 'react-hot-toast';
 
 const COLORS = ['#22c55e', '#eab308', '#ef4444', '#6366f1', '#06b6d4'];
 
@@ -28,7 +31,13 @@ function SentimentMeter({ score }) {
 }
 
 export default function AdminDashboard() {
-  const { students, teachers, subjects, feedbacks, feedbackForms } = useApp();
+  const { students, teachers, subjects, feedbacks, feedbackForms, refreshData } = useApp();
+
+  const handleLoadDemoData = () => {
+    saveFeedbacks(initialFeedbacks);
+    refreshData();
+    toast.success('Demo feedbacks loaded successfully! Enjoy your interview.');
+  };
 
   const globalAnalysis = useMemo(() => aggregateFeedbacks(feedbacks), [feedbacks]);
 
@@ -72,6 +81,12 @@ export default function AdminDashboard() {
 
   return (
     <DashboardLayout title="Admin Dashboard">
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+        <button onClick={handleLoadDemoData} className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem' }}>
+          <Brain size={14} /> Load Demo Data
+        </button>
+      </div>
+      
       {/* Overview Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         {[
@@ -211,6 +226,44 @@ export default function AdminDashboard() {
           </div>
         </div>
       )}
+
+      {/* Teachers Section */}
+      <div className="card anim-fade-up" style={{ marginTop: '2rem' }}>
+        <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: '#f1f5f9', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <UserCheck size={20} color="#06b6d4" /> Teachers Directory
+        </h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem' }}>
+          {teachers.map(t => (
+            <div key={t.id} style={{
+              background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.05)',
+              borderRadius: '0.75rem',
+              padding: '0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem'
+            }}>
+              <div style={{
+                width: 36, height: 36, borderRadius: '50%',
+                background: 'rgba(6,182,212,0.15)',
+                color: '#06b6d4',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 700, fontSize: '0.9rem'
+              }}>
+                {t.name.charAt(0)}
+              </div>
+              <div style={{ overflow: 'hidden' }}>
+                <div style={{ fontWeight: 600, color: '#f1f5f9', fontSize: '0.85rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {t.name}
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#64748b', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {t.department || 'Faculty'}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </DashboardLayout>
   );
 }

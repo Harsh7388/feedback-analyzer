@@ -42,6 +42,19 @@ export const initialSubjects = [
   { id: 's8-2', semesterId: 8, name: 'Blockchain Technology', code: 'CS801', teacherId: 't13' },
   { id: 's8-3', semesterId: 8, name: 'Research Methodology', code: 'CS802', teacherId: 't12' },
   { id: 's8-4', semesterId: 8, name: 'Project Work', code: 'CS803', teacherId: 't14' },
+  
+  // New Semester 7 Subjects (from Timetable)
+  { id: 's7-5', semesterId: 7, name: 'Artificial Intelligence', code: 'BCS701', teacherId: 't16' },
+  { id: 's7-6', semesterId: 7, name: 'Cryptography and Network Security', code: 'BCS072', teacherId: 't17' },
+  { id: 's7-7', semesterId: 7, name: 'Project Management', code: 'BOE070', teacherId: 't18' },
+  { id: 's7-8', semesterId: 7, name: 'Mini Project or Internship Assessment', code: 'BCS752', teacherId: 't19' },
+  { id: 's7-9', semesterId: 7, name: 'Startup and Entrepreneurial Activity Assessment', code: 'BCS754', teacherId: 't20' },
+  { id: 's7-10', semesterId: 7, name: 'Control of Robotic Systems', code: 'MNRB701', teacherId: 't21' },
+  { id: 's7-11', semesterId: 7, name: 'Artificial Intelligence LAB', code: 'BCS751', teacherId: 't16' },
+  { id: 's7-12', semesterId: 7, name: 'Project I', code: 'BCS753', teacherId: 't25' },
+  { id: 's7-13', semesterId: 7, name: 'Technical Training', code: 'TT701', teacherId: 't22' },
+  { id: 's7-14', semesterId: 7, name: 'Soft Skill', code: 'SS701', teacherId: 't23' },
+  { id: 's7-15', semesterId: 7, name: 'Aptitude', code: 'APT701', teacherId: 't24' },
 ];
 
 export const initialTeachers = [
@@ -60,6 +73,16 @@ export const initialTeachers = [
   { id: 't13', name: 'Dr. Kiran Bhat', email: 'kiran.bhat@college.edu', department: 'AI/ML', username: 'kiran.bhat', password: 'teacher123' },
   { id: 't14', name: 'Prof. Asha Menon', email: 'asha.menon@college.edu', department: 'Computer Science', username: 'asha.menon', password: 'teacher123' },
   { id: 't15', name: 'Harsh', email: 'harsh@college.edu', department: 'Computer Science', username: 'Harsh7388', password: '7388' },
+  { id: 't16', name: 'Mr. Pankaj Kumar', email: 'pankaj.kumar@college.edu', department: 'Computer Science', username: 'pankaj.kumar', password: 'teacher123' },
+  { id: 't17', name: 'Mrs. Akanksha Singh', email: 'akanksha.singh@college.edu', department: 'Computer Science', username: 'akanksha.singh', password: 'teacher123' },
+  { id: 't18', name: 'Mr. Santosh Kumar', email: 'santosh.kumar@college.edu', department: 'Computer Science', username: 'santosh.kumar', password: 'teacher123' },
+  { id: 't19', name: 'Mr. Ankur Srivastava', email: 'ankur.srivastava@college.edu', department: 'Computer Science', username: 'ankur.srivastava', password: 'teacher123' },
+  { id: 't20', name: 'T&P CELL', email: 'tnp@college.edu', department: 'Training & Placement', username: 'tnp.cell', password: 'teacher123' },
+  { id: 't21', name: 'Prof. S.K. Sharma', email: 'sk.sharma@college.edu', department: 'Computer Science', username: 'sk.sharma', password: 'teacher123' },
+  { id: 't22', name: 'Mr. Vivek Singh', email: 'vivek.singh@college.edu', department: 'Training & Placement', username: 'vivek.singh', password: 'teacher123' },
+  { id: 't23', name: 'Mrs. Nisha Pandey', email: 'nisha.pandey@college.edu', department: 'Soft Skills', username: 'nisha.pandey', password: 'teacher123' },
+  { id: 't24', name: 'Mr. Saurabh Srivastava', email: 'saurabh.srivastava@college.edu', department: 'Training & Placement', username: 'saurabh.srivastava', password: 'teacher123' },
+  { id: 't25', name: 'All Dept. Faculty', email: 'alldept@college.edu', department: 'Computer Science', username: 'all.dept', password: 'teacher123' },
 ];
 
 export const initialStudents = [
@@ -102,4 +125,52 @@ export const initialFeedbackForms = initialSubjects.map(sub => ({
   createdAt: new Date().toISOString(),
   isActive: true,
 }));
+
+export const initialFeedbacks = [];
+const demoComments = [
+  { text: "Great teaching, very clear concepts.", rating: 5 },
+  { text: "Good class, but could use more practical examples.", rating: 3 },
+  { text: "Very difficult to understand, needs improvement.", rating: 2 },
+  { text: "Excellent faculty and well structured course.", rating: 5 },
+  { text: "Average teaching style.", rating: 3 },
+  { text: "The practicals were not well organized and boring.", rating: 2 },
+  { text: "Brilliant explanations and very helpful out of class.", rating: 5 },
+  { text: "Okayish, but talks too fast.", rating: 3 },
+  { text: "Terrible experience, syllabus not covered.", rating: 1 },
+];
+
+initialSubjects.forEach((sub, subIdx) => {
+  // Let's add 2 to 4 feedbacks per subject randomly
+  const numFeedbacks = (subIdx % 3) + 2;
+  const formId = `form_${sub.id}`;
+  
+  for (let i = 0; i < numFeedbacks; i++) {
+    const stu = initialStudents[i % initialStudents.length];
+    // Mix the comments up
+    const review = demoComments[(subIdx * 2 + i) % demoComments.length];
+    
+    // Add some random variation to ratings
+    const ratingVar = Math.max(1, Math.min(5, review.rating + (Math.random() > 0.5 ? 0 : -1)));
+    
+    initialFeedbacks.push({
+      id: `fb_demo_${sub.id}_${i}`,
+      studentId: stu.id,
+      subjectId: sub.id,
+      formId: formId,
+      semester: sub.semesterId,
+      answers: {
+        q1: ratingVar,
+        q2: ratingVar,
+        q3: review.rating,
+        q4: ratingVar,
+        q5: review.rating,
+        q6: ratingVar,
+        q7: review.rating,
+        q8: ratingVar,
+        q9: review.text
+      },
+      submittedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString()
+    });
+  }
+});
 

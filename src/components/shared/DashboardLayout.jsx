@@ -1,20 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { Menu, ShieldCheck } from 'lucide-react';
+import { Menu, ShieldCheck, Sun, Moon, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import Chatbot from './Chatbot';
 
 export default function DashboardLayout({ children, title }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [adminHover, setAdminHover] = useState(false);
-  const { isAdmin } = useApp();
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+  const [sidebarHidden, setSidebarHidden] = useState(false);
+  const { isAdmin, currentUser } = useApp();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   return (
-    <div className="dashboard-layout">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+    <div className={`dashboard-layout ${sidebarHidden ? 'sidebar-hidden' : ''}`} style={{
+      '--bg-color': theme === 'light' ? '#f8fafc' : '#0f172a',
+      '--text-color': theme === 'light' ? '#0f172a' : '#f1f5f9',
+      '--card-bg': theme === 'light' ? '#ffffff' : '#1e293b',
+      '--border-color': theme === 'light' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.06)',
+      backgroundColor: 'var(--bg-color)',
+      color: 'var(--text-color)',
+      minHeight: '100vh',
+      display: 'flex',
+    }}>
+      {!sidebarHidden && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} theme={theme} />}
       
-      <main className="main-content">
+      <main className="main-content" style={{ flex: 1, padding: '2rem', transition: 'all 0.3s' }}>
         {/* Top Bar */}
         <header style={{
           display: 'flex',
@@ -49,36 +70,62 @@ export default function DashboardLayout({ children, title }) {
           </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            {/* Admin Panel Button */}
-            <button
-              id="admin-panel-top-btn"
-              onClick={() => navigate(isAdmin ? '/admin' : '/login/admin')}
-              onMouseEnter={() => setAdminHover(true)}
-              onMouseLeave={() => setAdminHover(false)}
-              aria-label="Go to Admin Panel"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.45rem',
-                padding: '0.42rem 0.9rem',
-                borderRadius: '0.6rem',
-                border: `1px solid ${adminHover ? 'rgba(249,115,22,0.55)' : 'rgba(249,115,22,0.25)'}`,
-                background: adminHover
-                  ? 'linear-gradient(135deg, rgba(249,115,22,0.22), rgba(239,68,68,0.15))'
-                  : 'rgba(249,115,22,0.08)',
-                color: adminHover ? '#fb923c' : '#f97316',
-                fontSize: '0.78rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                letterSpacing: '0.02em',
-                transition: 'all 0.2s ease',
-                boxShadow: adminHover ? '0 0 16px rgba(249,115,22,0.25)' : 'none',
-                transform: adminHover ? 'translateY(-1px)' : 'translateY(0)',
-              }}
-            >
-              <ShieldCheck size={15} strokeWidth={2} />
-              {isAdmin ? 'Admin Panel' : 'Admin Login'}
-            </button>
+            {/* Admin Controls */}
+            {isAdmin && (
+              <>
+                <button
+                  onClick={() => setSidebarHidden(!sidebarHidden)}
+                  title="Toggle Sidebar"
+                  style={{
+                    background: 'transparent', border: '1px solid var(--border-color)', borderRadius: '0.5rem', padding: '0.4rem', color: 'var(--text-color)', cursor: 'pointer', display: 'flex', alignItems: 'center'
+                  }}
+                >
+                  {sidebarHidden ? <PanelLeft size={16} /> : <PanelLeftClose size={16} />}
+                </button>
+                <button
+                  onClick={toggleTheme}
+                  title="Toggle Theme"
+                  style={{
+                    background: 'transparent', border: '1px solid var(--border-color)', borderRadius: '0.5rem', padding: '0.4rem', color: 'var(--text-color)', cursor: 'pointer', display: 'flex', alignItems: 'center'
+                  }}
+                >
+                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                </button>
+              </>
+            )}
+
+            {/* Admin Panel Button - Only show if Admin */}
+            {isAdmin && (
+              <button
+                id="admin-panel-top-btn"
+                onClick={() => navigate('/admin')}
+                onMouseEnter={() => setAdminHover(true)}
+                onMouseLeave={() => setAdminHover(false)}
+                aria-label="Go to Admin Panel"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  padding: '0.42rem 0.9rem',
+                  borderRadius: '0.6rem',
+                  border: `1px solid ${adminHover ? 'rgba(249,115,22,0.55)' : 'rgba(249,115,22,0.25)'}`,
+                  background: adminHover
+                    ? 'linear-gradient(135deg, rgba(249,115,22,0.22), rgba(239,68,68,0.15))'
+                    : 'rgba(249,115,22,0.08)',
+                  color: adminHover ? '#fb923c' : '#f97316',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  letterSpacing: '0.02em',
+                  transition: 'all 0.2s ease',
+                  boxShadow: adminHover ? '0 0 16px rgba(249,115,22,0.25)' : 'none',
+                  transform: adminHover ? 'translateY(-1px)' : 'translateY(0)',
+                }}
+              >
+                <ShieldCheck size={15} strokeWidth={2} />
+                Admin Panel
+              </button>
+            )}
 
             <div style={{
               background: 'rgba(99,102,241,0.08)',
@@ -98,6 +145,8 @@ export default function DashboardLayout({ children, title }) {
           {children}
         </div>
       </main>
+      
+      <Chatbot />
 
       <style>{`
         @media (max-width: 768px) {

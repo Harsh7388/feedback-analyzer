@@ -6,7 +6,7 @@ import {
   getFeedbacks, saveFeedbacks,
   isInitialized, markInitialized,
 } from '../utils/storage';
-import { initialSubjects, initialTeachers, initialFeedbackForms, initialStudents } from '../data/initialData';
+import { initialSubjects, initialTeachers, initialFeedbackForms, initialStudents, initialFeedbacks } from '../data/initialData';
 import { adminCredentials } from '../data/initialData';
 
 const AppContext = createContext(null);
@@ -23,11 +23,12 @@ export function AppProvider({ children }) {
 
   // Initialize app data
   useEffect(() => {
-    if (!isInitialized() || getFeedbackForms().length === 0) {
+    if (!isInitialized() || getFeedbackForms().length === 0 || getFeedbacks().length === 0) {
       if (getTeachers().length === 0) saveTeachers(initialTeachers);
       if (getSubjects().length === 0) saveSubjects(initialSubjects);
       if (getFeedbackForms().length === 0) saveFeedbackForms(initialFeedbackForms);
       if (getStudents().length === 0) saveStudents(initialStudents);
+      if (getFeedbacks().length === 0) saveFeedbacks(initialFeedbacks);
       markInitialized();
     }
 

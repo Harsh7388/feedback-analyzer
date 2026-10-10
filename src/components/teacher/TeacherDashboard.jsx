@@ -111,6 +111,29 @@ export default function TeacherDashboard() {
         />
       )}
 
+      {/* AI/ML Context Banner */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(99,102,241,0.1), rgba(139,92,246,0.1))',
+        border: '1px solid rgba(99,102,241,0.2)',
+        borderRadius: '1rem',
+        padding: '1.25rem',
+        marginBottom: '2rem',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '1rem'
+      }} className="anim-fade-up">
+        <div style={{ fontSize: '2rem' }}>🧠</div>
+        <div>
+          <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-color)', marginBottom: '0.25rem' }}>
+            AI-Driven Feedback Analysis
+          </h3>
+          <p style={{ color: '#64748b', fontSize: '0.85rem', lineHeight: 1.5 }}>
+            Welcome to FeedSence. Please note that this is not a standard static website; it is an intelligent AI/ML based platform. 
+            Student feedback is automatically processed using Machine Learning algorithms to determine sentiment (positive, neutral, negative) and extract key insights.
+          </p>
+        </div>
+      </div>
+
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
         {[

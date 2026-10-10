@@ -82,9 +82,31 @@ export default function AdminSentiment() {
     }).filter(t => t.analysis.totalFeedbacks > 0 || true).sort((a, b) => b.analysis.totalFeedbacks - a.analysis.totalFeedbacks);
   }, [teachers, subjects, feedbacks]);
 
-  const filtered = tab === 'subject'
-    ? subjectAnalysis.filter(s => s.name.toLowerCase().includes(search.toLowerCase()) || s.code?.toLowerCase().includes(search.toLowerCase()))
-    : teacherAnalysis.filter(t => t.name.toLowerCase().includes(search.toLowerCase()));
+  // Semester-wise analysis
+  const semesterAnalysis = useMemo(() => {
+    const sems = {};
+    feedbacks.forEach(f => {
+      const sem = f.semester || 1;
+      if (!sems[sem]) sems[sem] = [];
+      sems[sem].push(f);
+    });
+    
+    return Object.keys(sems).map(sem => ({
+      id: `sem-${sem}`,
+      name: `Semester ${sem}`,
+      analysis: aggregateFeedbacks(sems[sem]),
+      feedbacks: sems[sem]
+    })).sort((a, b) => a.name.localeCompare(b.name));
+  }, [feedbacks]);
+
+  let filtered = [];
+  if (tab === 'subject') {
+    filtered = subjectAnalysis.filter(s => s.name.toLowerCase().includes(search.toLowerCase()) || s.code?.toLowerCase().includes(search.toLowerCase()));
+  } else if (tab === 'teacher') {
+    filtered = teacherAnalysis.filter(t => t.name.toLowerCase().includes(search.toLowerCase()));
+  } else {
+    filtered = semesterAnalysis.filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
+  }
 
   // Top/Bottom performers for chart
   const chartData = tab === 'subject'
@@ -94,11 +116,18 @@ export default function AdminSentiment() {
         feedbacks: s.analysis.totalFeedbacks,
         positive: s.analysis.positivePercent,
       }))
-    : teacherAnalysis.filter(t => t.analysis.totalFeedbacks > 0).slice(0, 8).map(t => ({
+    : tab === 'teacher'
+    ? teacherAnalysis.filter(t => t.analysis.totalFeedbacks > 0).slice(0, 8).map(t => ({
         name: t.name.split(' ').slice(-1)[0],
         avgRating: t.analysis.avgRating,
         feedbacks: t.analysis.totalFeedbacks,
         positive: t.analysis.positivePercent,
+      }))
+    : semesterAnalysis.map(s => ({
+        name: s.name,
+        avgRating: s.analysis.avgRating,
+        feedbacks: s.analysis.totalFeedbacks,
+        positive: s.analysis.positivePercent,
       }));
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -116,8 +145,8 @@ export default function AdminSentiment() {
   return (
     <DashboardLayout title="Sentiment Analysis">
       {/* Tab Switch */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '0.875rem', padding: '0.35rem', width: 'fit-content' }}>
-        {['subject', 'teacher'].map(t => (
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', background: 'rgba(255,255,255,0.03)', borderRadius: '0.875rem', padding: '0.35rem', width: 'fit-content', flexWrap: 'wrap' }}>
+        {['subject', 'teacher', 'semester'].map(t => (
           <button key={t} onClick={() => setTab(t)}
             style={{
               padding: '0.5rem 1.25rem', borderRadius: '0.625rem', border: 'none', cursor: 'pointer',
@@ -126,7 +155,7 @@ export default function AdminSentiment() {
               transition: 'all 0.2s', boxShadow: tab === t ? '0 4px 12px rgba(99,102,241,0.4)' : 'none',
             }}
           >
-            {t === 'subject' ? '📚 Subject-wise' : '👨‍🏫 Teacher-wise'}
+            {t === 'subject' ? '📚 Subject-wise' : t === 'teacher' ? '👨‍🏫 Teacher-wise' : '📅 Semester-wise'}
           </button>
         ))}
       </div>
@@ -134,8 +163,8 @@ export default function AdminSentiment() {
       {/* Chart */}
       {chartData.length > 0 && (
         <div className="card anim-fade-up" style={{ marginBottom: '1.5rem' }}>
-          <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: '#f1f5f9', marginBottom: '1rem' }}>
-            Average Rating by {tab === 'subject' ? 'Subject' : 'Teacher'}
+          <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: '#f1f5f9', marginBottom: '1rem', textTransform: 'capitalize' }}>
+            Average Rating by {tab}
           </h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={chartData} margin={{ top: 5, right: 10, left: -20, bottom: 5 }}>
@@ -173,7 +202,7 @@ export default function AdminSentiment() {
             <SentimentCard
               label={tab === 'subject' ? `${item.code}: ${item.name}` : item.name}
               analysis={item.analysis}
-              color={tab === 'subject' ? '#6366f1' : '#06b6d4'}
+              color={tab === 'subject' ? '#6366f1' : tab === 'teacher' ? '#06b6d4' : '#8b5cf6'}
             />
           </div>
         ))}

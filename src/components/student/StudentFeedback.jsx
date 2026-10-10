@@ -145,6 +145,7 @@ function FeedbackForm({ form, subject, teacher, studentId, onSubmit, onCancel })
     questions.filter(q => q.type === 'rating').forEach(q => {
       if (!ratings[q.id]) errs[q.id] = 'Please provide a star rating';
     });
+    if (!comment.trim()) errs['comment'] = 'This field is required — please share your comments or suggestions';
     return errs;
   };
 
@@ -153,7 +154,7 @@ function FeedbackForm({ form, subject, teacher, studentId, onSubmit, onCancel })
     const errs = validate();
     if (Object.keys(errs).length > 0) {
       setErrors(errs);
-      toast.error('Please answer all rating questions before submitting');
+      toast.error('Please answer all questions before submitting');
       return;
     }
 
@@ -258,14 +259,21 @@ function FeedbackForm({ form, subject, teacher, studentId, onSubmit, onCancel })
                   id={q.id}
                   placeholder="Share your thoughts, teaching methods feedback, or suggestions for improvement..."
                   value={comment}
-                  onChange={e => setComment(e.target.value)}
+                  onChange={e => { setComment(e.target.value); setErrors(er => ({ ...er, comment: '' })); }}
                   className="input-field"
                   rows={4}
-                  style={{ resize: 'vertical', fontFamily: 'inherit', width: '100%' }}
+                  required
+                  style={{ resize: 'vertical', fontFamily: 'inherit', width: '100%', borderColor: errors['comment'] ? '#f87171' : '' }}
                 />
-                <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '0.35rem' }}>
-                  Optional · Your feedback is completely confidential
-                </p>
+                {errors['comment'] ? (
+                  <p style={{ color: '#f87171', fontSize: '0.8rem', marginTop: '0.4rem', fontWeight: 500 }}>
+                    ⚠ {errors['comment']}
+                  </p>
+                ) : (
+                  <p style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '0.35rem' }}>
+                    <span style={{ color: '#f87171', fontWeight: 700 }}>* Required</span> · Your feedback is completely confidential
+                  </p>
+                )}
               </div>
             )}
           </div>

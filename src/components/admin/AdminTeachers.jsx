@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import DashboardLayout from '../shared/DashboardLayout';
-import { UserCheck, Plus, Search, Eye, EyeOff, AlertCircle, X } from 'lucide-react';
+import { UserCheck, Plus, Search, Eye, EyeOff, AlertCircle, X, Brain } from 'lucide-react';
 import { addTeacher, saveTeachers } from '../../utils/storage';
 import toast from 'react-hot-toast';
+import { aggregateFeedbacks } from '../../utils/sentimentAnalysis';
 
 function AddTeacherModal({ onClose, onAdded }) {
   const [form, setForm] = useState({ name: '', email: '', department: '', username: '', password: '' });
@@ -89,9 +90,10 @@ function AddTeacherModal({ onClose, onAdded }) {
 }
 
 export default function AdminTeachers() {
-  const { teachers, setTeachers, subjects } = useApp();
+  const { teachers, setTeachers, subjects, feedbacks } = useApp();
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [selectedTeacher, setSelectedTeacher] = useState(null);
 
   const filtered = teachers.filter(t =>
     !search || t.name.toLowerCase().includes(search.toLowerCase()) || t.department?.toLowerCase().includes(search.toLowerCase()) || t.username?.toLowerCase().includes(search.toLowerCase())
@@ -104,6 +106,63 @@ export default function AdminTeachers() {
   return (
     <DashboardLayout title="Teacher Management">
       {showModal && <AddTeacherModal onClose={() => setShowModal(false)} onAdded={handleAdded} />}
+      
+      {/* Teacher Performance Modal */}
+      {selectedTeacher && (
+        <div className="modal-overlay" onClick={() => setSelectedTeacher(null)}>
+          <div className="modal-box anim-scale-in" onClick={e => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.2rem', fontWeight: 700, color: '#f1f5f9' }}>
+                Performance Analysis: {selectedTeacher.name}
+              </h3>
+              <button onClick={() => setSelectedTeacher(null)} style={{ background: 'none', border: 'none', color: '#64748b', cursor: 'pointer' }}><X size={20} /></button>
+            </div>
+            
+            {(() => {
+              const tSubjects = subjects.filter(s => s.teacherId === selectedTeacher.id);
+              const tFeedbacks = feedbacks.filter(f => tSubjects.some(s => s.id === f.subjectId));
+              const analysis = aggregateFeedbacks(tFeedbacks);
+              
+              if (tFeedbacks.length === 0) {
+                return <p style={{ color: '#64748b', textAlign: 'center', padding: '2rem 0' }}>No feedback available for this teacher yet.</p>;
+              }
+              
+              return (
+                <div>
+                  <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, background: 'rgba(99,102,241,0.1)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid rgba(99,102,241,0.2)', textAlign: 'center' }}>
+                      <div style={{ fontSize: '2rem', fontWeight: 800, color: '#8b5cf6' }}>{analysis.avgRating.toFixed(1)}/5</div>
+                      <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Average Rating</div>
+                    </div>
+                    <div style={{ flex: 1, background: 'rgba(34,197,94,0.1)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid rgba(34,197,94,0.2)', textAlign: 'center' }}>
+                      <div style={{ fontSize: '2rem', fontWeight: 800, color: '#4ade80' }}>{analysis.totalFeedbacks}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Total Feedbacks</div>
+                    </div>
+                    <div style={{ flex: 1, background: 'rgba(234,179,8,0.1)', padding: '1rem', borderRadius: '0.75rem', border: '1px solid rgba(234,179,8,0.2)', textAlign: 'center', textTransform: 'capitalize' }}>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fbbf24', marginTop: '0.25rem' }}>{analysis.sentimentLabel}</div>
+                      <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem' }}>Overall Sentiment</div>
+                    </div>
+                  </div>
+                  
+                  <div style={{ marginBottom: '1rem' }}>
+                    <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginBottom: '0.5rem' }}>Sentiment Breakdown</p>
+                    <div style={{ display: 'flex', height: '12px', borderRadius: '6px', overflow: 'hidden' }}>
+                      <div style={{ width: `${analysis.positivePercent}%`, background: '#22c55e' }} title={`Positive: ${analysis.positivePercent}%`} />
+                      <div style={{ width: `${analysis.neutralPercent}%`, background: '#eab308' }} title={`Neutral: ${analysis.neutralPercent}%`} />
+                      <div style={{ width: `${analysis.negativePercent}%`, background: '#ef4444' }} title={`Negative: ${analysis.negativePercent}%`} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', marginTop: '0.4rem', color: '#64748b' }}>
+                      <span style={{ color: '#4ade80' }}>Positive: {analysis.positivePercent}%</span>
+                      <span style={{ color: '#fbbf24' }}>Neutral: {analysis.neutralPercent}%</span>
+                      <span style={{ color: '#f87171' }}>Negative: {analysis.negativePercent}%</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: 1, minWidth: '200px' }}>
@@ -155,9 +214,18 @@ export default function AdminTeachers() {
                 borderRadius: '0.5rem', padding: '0.5rem 0.75rem',
                 fontSize: '0.78rem', color: '#94a3b8',
                 fontFamily: 'monospace',
+                marginBottom: '0.75rem'
               }}>
                 Login: {t.username} / {t.password}
               </div>
+              
+              <button 
+                onClick={() => setSelectedTeacher(t)}
+                className="btn-secondary" 
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', padding: '0.5rem' }}
+              >
+                <Brain size={16} /> View Performance
+              </button>
             </div>
           );
         })}
