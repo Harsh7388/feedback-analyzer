@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Brain, GraduationCap, UserCheck, ArrowRight,
-  BarChart2, MessageCircle, TrendingUp, CheckCircle, ChevronRight, ShieldCheck
+  BarChart2, MessageCircle, TrendingUp, CheckCircle, ChevronRight, ShieldCheck,
+  Sun, Moon
 } from 'lucide-react';
 import Chatbot from '../components/shared/Chatbot';
 
@@ -140,9 +141,15 @@ const features = [
 export default function LandingPage() {
   const navigate = useNavigate();
   const [activeCard, setActiveCard] = useState(null);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   return (
-    <div style={{ minHeight: '100vh', position: 'relative', color: '#e2e8f0' }}>
+    <div style={{ minHeight: '100vh', position: 'relative', color: 'var(--color-text)', background: 'var(--color-bg)' }}>
       <OrbBackground />
 
       {/* ── Nav ─────────────────────────────────────────────────── */}
@@ -151,9 +158,9 @@ export default function LandingPage() {
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 clamp(1.5rem, 5vw, 3.5rem)',
         height: '60px',
-        background: 'rgba(10,14,28,0.75)',
+        background: 'var(--nav-bg, rgba(7, 11, 20, 0.75))',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
+        borderBottom: '1px solid rgba(0, 242, 254, 0.1)',
       }}>
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -197,6 +204,17 @@ export default function LandingPage() {
           >
             Register
           </Link>
+          <button 
+            onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')} 
+            style={{ 
+              background: 'none', border: 'none', color: 'var(--color-text)', 
+              cursor: 'pointer', display: 'flex', alignItems: 'center', 
+              padding: '0.4rem', marginLeft: '0.5rem', borderRadius: '50%' 
+            }}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
         </div>
       </nav>
 
