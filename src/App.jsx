@@ -26,6 +26,9 @@ import AdminSentiment from './components/admin/AdminSentiment';
 import AdminStudents from './components/admin/AdminStudents';
 import AdminTeachers from './components/admin/AdminTeachers';
 import AdminSubjects from './components/admin/AdminSubjects';
+import AdminAIInsights from './components/admin/AdminAIInsights';
+import AdminTeacherPerformance from './components/admin/AdminTeacherPerformance';
+import AdminForms from './components/admin/AdminForms';
 
 // Shared
 import CookieBanner from './components/shared/CookieBanner';
@@ -90,6 +93,9 @@ function AppRoutes() {
         <Route path="/admin/students" element={<RequireAuth role="admin"><AdminStudents /></RequireAuth>} />
         <Route path="/admin/teachers" element={<RequireAuth role="admin"><AdminTeachers /></RequireAuth>} />
         <Route path="/admin/subjects" element={<RequireAuth role="admin"><AdminSubjects /></RequireAuth>} />
+        <Route path="/admin/ai-insights" element={<RequireAuth role="admin"><AdminAIInsights /></RequireAuth>} />
+        <Route path="/admin/teacher-performance" element={<RequireAuth role="admin"><AdminTeacherPerformance /></RequireAuth>} />
+        <Route path="/admin/forms" element={<RequireAuth role="admin"><AdminForms /></RequireAuth>} />
 
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />

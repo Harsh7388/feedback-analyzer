@@ -128,15 +128,21 @@ export const initialFeedbackForms = initialSubjects.map(sub => ({
 
 export const initialFeedbacks = [];
 const demoComments = [
-  { text: "Great teaching, very clear concepts.", rating: 5 },
-  { text: "Good class, but could use more practical examples.", rating: 3 },
-  { text: "Very difficult to understand, needs improvement.", rating: 2 },
-  { text: "Excellent faculty and well structured course.", rating: 5 },
-  { text: "Average teaching style.", rating: 3 },
-  { text: "The practicals were not well organized and boring.", rating: 2 },
-  { text: "Brilliant explanations and very helpful out of class.", rating: 5 },
-  { text: "Okayish, but talks too fast.", rating: 3 },
-  { text: "Terrible experience, syllabus not covered.", rating: 1 },
+  { text: "Great teaching, very clear concepts. Dr. Sharma explains every topic with real-world examples. The lab sessions are well organized and the faculty is very helpful outside class hours.", rating: 5 },
+  { text: "Good class, but could use more practical examples. Overall the teaching is decent and syllabus is covered properly.", rating: 3 },
+  { text: "Very difficult to understand, the teacher speaks too fast and does not wait for students. The lab is disorganized and equipment is broken. Very frustrating experience.", rating: 2 },
+  { text: "Excellent faculty and well structured course. The professor is very knowledgeable and always available for doubts. I learned a lot this semester. Brilliant teaching methodology.", rating: 5 },
+  { text: "Average teaching style. Sometimes the content is not explained clearly. Infrastructure is okay but WiFi is very slow in the lab.", rating: 3 },
+  { text: "The practicals were not well organized and boring. Lab equipment is outdated and the instructor is often absent. Curriculum coverage is incomplete. Terrible experience overall.", rating: 2 },
+  { text: "Brilliant explanations and very helpful out of class. The teacher is passionate about the subject and makes learning enjoyable. Highly recommended faculty.", rating: 5 },
+  { text: "Okay teaching, but talks too fast during lectures. Assignments are good but grading is unfair. Need improvement in student interaction.", rating: 3 },
+  { text: "Terrible experience this semester. Syllabus not covered, teacher is always late and sometimes absent. This is a waste of time and needs urgent attention.", rating: 1 },
+  { text: "Accha padhata hai sir, concepts bahut clear hain. Lab sessions mast hain. Zabardast faculty overall.", rating: 5 },
+  { text: "Thoda boring class hai, but content covered hai. WiFi kaafi slow hai campus mein.", rating: 3 },
+  { text: "Bakwas class, kuch samjha hi nahi. Teacher kabhi aate nahi properly. Bahut frustrating situation hai. This is completely unacceptable.", rating: 1 },
+  { text: "The course content is well designed and assignments are relevant. Teacher is punctual and professional. Great learning experience with excellent support during office hours.", rating: 4 },
+  { text: "Infrastructure needs serious improvement. Library resources are outdated. However the faculty is supportive and helpful with student doubts.", rating: 3 },
+  { text: "Outstanding performance by the teacher! Best faculty I have encountered. Very engaging lectures with practical demonstrations. The curriculum is comprehensive and well-structured.", rating: 5 },
 ];
 
 initialSubjects.forEach((sub, subIdx) => {
@@ -169,6 +175,8 @@ initialSubjects.forEach((sub, subIdx) => {
         q8: ratingVar,
         q9: review.text
       },
+      comment: review.text,
+      avgRating: ratingVar,
       submittedAt: new Date(Date.now() - Math.random() * 10000000000).toISOString()
     });
   }

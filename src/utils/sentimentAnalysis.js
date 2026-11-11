@@ -7,7 +7,9 @@ const positiveWords = [
   'encouraging', 'patient', 'thorough', 'organized', 'professional', 'inspiring',
   'best', 'love', 'liked', 'enjoyed', 'learned', 'understand', 'improved', 'brilliant',
   'superb', 'exceptional', 'perfect', 'impressive', 'motivated', 'supportive', 'awesome',
-  'satisfied', 'happy', 'positive', 'productive', 'interactive', 'interesting', 'fun'
+  'satisfied', 'happy', 'positive', 'productive', 'interactive', 'interesting', 'fun',
+  // Hinglish additions
+  'badhiya', 'accha', 'zabardast', 'mast', 'shandar', 'lajawab', 'behtareen',
 ];
 
 const negativeWords = [

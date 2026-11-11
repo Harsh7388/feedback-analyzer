@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import {
   LayoutDashboard, BookOpen, Star, LogOut, Users, Settings,
   BarChart3, ClipboardList, UserCheck, ShieldCheck, ChevronRight,
-  GraduationCap, Brain
+  GraduationCap, Brain, Sparkles, TrendingUp,
 } from 'lucide-react';
 
 function Logo() {
@@ -40,6 +40,9 @@ const adminLinks = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
   { to: '/admin/feedbacks', icon: BarChart3, label: 'All Feedbacks' },
   { to: '/admin/sentiment', icon: Brain, label: 'Sentiment Analysis' },
+  { to: '/admin/ai-insights', icon: Sparkles, label: 'AI Intelligence' },
+  { to: '/admin/teacher-performance', icon: TrendingUp, label: 'Teacher Analytics' },
+  { to: '/admin/forms', icon: ClipboardList, label: 'Form Builder' },
   { to: '/admin/students', icon: GraduationCap, label: 'Students' },
   { to: '/admin/teachers', icon: UserCheck, label: 'Teachers' },
   { to: '/admin/subjects', icon: BookOpen, label: 'Subjects' },
