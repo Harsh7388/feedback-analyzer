@@ -218,11 +218,12 @@ export default function AdminFeedbacks() {
       ...filtered.map(f => {
         const student = students.find(s => s.id === f.studentId);
         const subject = subjects.find(s => s.id === f.subjectId);
+        const safeComment = (f.comment || '').replace(/"/g, "'");
         return [
           f.id, student?.name || 'Anonymous', subject?.name || 'Unknown',
           f.semester, (f.avgRating || 3).toFixed(1),
           f._sentiment.label, f._urgency.level, f._spam.isSpam ? 'Yes' : 'No',
-          `"${(f.comment || '').replace(/"/g, "'')}"`,
+          `"${safeComment}"`,
           new Date(f.submittedAt).toLocaleDateString(),
         ];
       })

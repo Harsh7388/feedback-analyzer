@@ -139,6 +139,7 @@ function FeedbackForm({ form, subject, teacher, studentId, onSubmit, onCancel })
   const [comment, setComment] = useState('');
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
+  const [isAnonymous, setIsAnonymous] = useState(true);
 
   const validate = () => {
     const errs = {};
@@ -172,6 +173,7 @@ function FeedbackForm({ form, subject, teacher, studentId, onSubmit, onCancel })
         ratings,
         comment: comment.trim(),
         avgRating,
+        isAnonymous,
       });
     } catch (err) {
       setSubmitting(false);
